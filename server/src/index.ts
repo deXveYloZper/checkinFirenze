@@ -1,34 +1,31 @@
-// src/index.ts
+// server/src/index.ts
 
 import express, { Application, Request, Response, NextFunction } from 'express';
 import { PORT } from './config';
+import { initDB } from './config/db'; // <-- import DB init
 import routes from './routes';
 
 const app: Application = express();
 
-/*
-  Middleware setup
-*/
-app.use(express.json()); 
-// This allows us to parse JSON bodies in requests
+// Connect to DB first
+initDB().then(() => {
+  console.log('Database initialized');
+});
 
-/*
-  Routes
-*/
+// Global middlewares
+app.use(express.json());
+
+// Routes
 app.use('/', routes);
 
-/*
-  Basic error handling
-  (You could move this to a dedicated middleware file later)
-*/
+
+// Basic error handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error('Error handler:', err);
   res.status(500).json({ error: 'Internal server error' });
 });
 
-/*
-  Start the server
-*/
+// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

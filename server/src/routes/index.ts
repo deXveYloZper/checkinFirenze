@@ -1,13 +1,15 @@
-// src/routes/index.ts
+// server/src/routes/index.ts
 import { Router, Request, Response } from 'express';
+import authRoutes from './auth.routes';
 
 const router = Router();
 
-/*
-  Sample route to verify the server is running
-*/
+// Root route example
 router.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: 'Welcome to Firenze Check-In API!' });
 });
+
+// Mount auth routes at /auth
+router.use('/auth', authRoutes);
 
 export default router;
